@@ -1,42 +1,67 @@
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
 import config from '../config';
-import ValidateError from '../ValidateError'
+import ValidateError from '../ValidateError';
+import PropTypes from 'prop-types';
+import '../AddFolder/AddFolder.css';
 
-class User extends Component {
+export default class AddFolder extends Component {
   static contextType = ApiContext;
 
-  addFolder = (name) => {
-    fetch(`${config.API_ENDPOINT}/folders/${name}`, {
-      method: 'POST',
-      header:{
-        'content-type': 'application/json'
+  constructor(props){
+    super(props);
+    this.state={
+      folderName:{
+        value: '',
+        touched: false
+      }
+    }
+  }
+
+  updateFolderName(foldername){
+    this.setState({
+      folderName:{
+        value: foldername, 
+        touched: true
       }
     })
-    .then(res=>res.json())
-    .then(resjson=>this.context.addFolder(resjson))
-    .catch(error => {
-      console.error({ error })
+  }
+
+  handleSumitFolder = (event) =>{
+    event.preventDefault();
+    let nameError=this.validateName();
+    if(nameError){
+      this.setState({
+        folderName:{value:this.state.folderName.value, touched:true}
+      })
+      return
+    }
+    console.log(this.state)
+    const foldername=this.state.folderName.value
+    console.log(foldername)
+    fetch(`${config.API_ENDPOINT}/folders/`, {
+      method: 'POST',
+      headers:{
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({'name': foldername})
     })
+    .then(res=>res.json())
+    .then(data=>{
+      console.log(data)
+      this.context.addFolder(data)
+      this.props.history.push('/')
+    })
+    .catch(error=>console.log(error))
   }
 
-  handleSumitFolder(event){
-    event.preventDefault()
-    //create a function that makes this guy working
-  }
-
-
-  updateFolderName(name){
-    const newFolder=name.target.value;
-    this.context.updateAddFolder(newFolder)
-  }
-
+  
   //validate folder name
   validateName(){
-    const name = this.state.name.value.trim()
-    if(name.length === 0){
+    const folderName = this.state.folderName.value.trim()
+    if(folderName.length === 0){
       return 'Name is required'
-    } else if(name.length < 3){
+    } else if(folderName.length < 3){
       return 'Name must be at least 3 characters long';
     }
   }
@@ -47,34 +72,33 @@ class User extends Component {
     return (
       <div>
         <h2>Add A New Folder</h2>
-        <form>
-          <div className='user-name'>
-            <label htmlFor="user" className="user">
-            </label>
-            
-            <input 
-              text="folder-name" 
-              className="folder-name"
-              name="folder-name" 
-              id="folder-name" 
-              onChange={e => this.updateFolderName(e.target.value)}/>
-            
-            {this.state.name.touched && (
-            <ValidateError message={nameError} />
-            )}
+
+        <form className="add-folder" onSubmit={e=>this.handleSumitFolder(e)}> 
+          <label htmlFor="name" className="user">
+          {this.state.folderName.touched && (
+          <ValidateError message={nameError} />
+          )}
+          </label>
           
-      
-            <button 
-              type="submit" 
-              className="add-folder-button"
-              onSubmit={e=>this.handleSumitFolder(e)}>
-              Add New Folder</button>
+          <input 
+            type="text" 
+            className="folder-name"
+            name="folder-name" 
+            id="folder-name" 
+            onChange={e => this.updateFolderName(e.target.value)}/>
           
-          </div>
+          <button 
+            type="submit" 
+            className="add-folder-button">
+            Add New Folder</button>
+          
         </form>
       </div>
     );
   }
 }
 
-export default User;
+
+AddFolder.propTypes = {
+  history: PropTypes.object
+}
