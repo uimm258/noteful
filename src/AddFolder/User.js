@@ -12,7 +12,7 @@ class User extends Component {
             </label>
           </div>
           <div className='button'>
-            <button type="submit" className="add-new">Add</button>
+            <button type="submit" >Add New Folder</button>
           </div>
         </form>
       </div>
