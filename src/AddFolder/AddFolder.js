@@ -30,15 +30,16 @@ export default class AddFolder extends Component {
   handleSumitFolder = (event) =>{
     event.preventDefault();
     let nameError=this.validateName();
+    const foldername=this.state.folderName.value;
     if(nameError){
       this.setState({
-        folderName:{value:this.state.folderName.value, touched:true}
+        folderName:{
+          value:foldername, 
+          touched:true}
       })
       return
     }
-    console.log(this.state)
-    const foldername=this.state.folderName.value
-    console.log(foldername)
+
     fetch(`${config.API_ENDPOINT}/folders/`, {
       method: 'POST',
       headers:{
@@ -90,7 +91,7 @@ export default class AddFolder extends Component {
           <button 
             type="submit" 
             className="add-folder-button">
-            Add New Folder</button>
+            Submit</button>
           
         </form>
       </div>
