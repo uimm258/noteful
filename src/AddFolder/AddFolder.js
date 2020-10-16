@@ -86,7 +86,8 @@ export default class AddFolder extends Component {
             className="folder-name"
             name="folder-name" 
             id="folder-name" 
-            onChange={e => this.updateFolderName(e.target.value)}/>
+            onChange={e => this.updateFolderName(e.target.value)}
+            required/>
           
           <button 
             type="submit" 
@@ -103,3 +104,4 @@ export default class AddFolder extends Component {
 AddFolder.propTypes = {
   history: PropTypes.object
 }
+

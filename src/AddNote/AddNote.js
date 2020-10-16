@@ -76,7 +76,6 @@ export default class AddNote extends Component{
           })
           .then(res=>res.json())
           .then(data=>{
-            console.log(data)
             this.context.addNote(data)
             this.props.history.push('/')
           })
@@ -123,7 +122,8 @@ export default class AddNote extends Component{
                     <input
                         type="text"
                         className="note-name"
-                        onChange={e => this.updateNoteName(e.target.value)}/>
+                        onChange={e => this.updateNoteName(e.target.value)}
+                        required/>
 
                 </div>
 
@@ -135,7 +135,8 @@ export default class AddNote extends Component{
                     <input 
                         type="text"
                         className="add-content"
-                        onChange={e=>this.updateNoteContent(e.target.value)}/>
+                        onChange={e=>this.updateNoteContent(e.target.value)}
+                        required/>
                     
                 </div>
                 <p>Select A Folder</p>
