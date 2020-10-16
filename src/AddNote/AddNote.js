@@ -3,9 +3,10 @@ import ApiContext from '../ApiContext'
 import config from '../config'
 import ValidateError from '../ValidateError'
 import '../AddNote/AddNote.css'
+import PropTypes from 'prop-types';
 
 
-class AddNote extends Component{
+export default class AddNote extends Component{
     static contextType = ApiContext;
 
     constructor(props){
@@ -19,6 +20,7 @@ class AddNote extends Component{
                 value:'',
                 touched:false
             },
+            folderId: ' '
         }
     }
 
@@ -45,6 +47,7 @@ class AddNote extends Component{
         let contentError = this.validateContent();        
         const noteName=this.state.noteName.value;
         const content=this.state.content.value;
+        const folderID=event.currentTarget.querySelector('select').value;
         if(nameError){
             this.setState({
                 noteName:{
@@ -69,7 +72,7 @@ class AddNote extends Component{
             headers:{
               'content-type': 'application/json'
             },
-            body: JSON.stringify({'name': noteName, 'content':content})
+            body: JSON.stringify({'name': noteName, 'content':content, 'folderId': folderID})
           })
           .then(res=>res.json())
           .then(data=>{
@@ -152,4 +155,6 @@ class AddNote extends Component{
 
 }
 
-export default AddNote
+AddNote.propTypes = {
+    history: PropTypes.object
+}
